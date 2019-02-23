@@ -1,0 +1,29 @@
+Package: twitterAnalytics
+Type: Package
+Title: Twitter Analytics tools
+Version: 0.1.0
+Authors@R: c(
+    person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("aut","com","cre", "cph"))
+    )
+Maintainer: Alejandro Baranek <abaranek@dc.uba.ar>
+Description: Different tools and methods for making twitter analytics
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Suggests: knitr, rmarkdown,
+    covr
+VignetteBuilder: knitr
+Depends: R (>= 3.4)
+Imports: futile.logger,
+         dplyr,
+         tibble,
+         reshape2,
+         readr,
+         R6,
+         testthat
+Collate:
+  'names-age-prediction.R'
+  'zzz.R'
+BugReports: https://github.com/kenarab/twitterAnalytics/issues
+URL: https://github.com/kenarab/twitterAnalytics/Rpolyhedra
