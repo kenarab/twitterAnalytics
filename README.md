@@ -39,10 +39,11 @@ sim.1b <- names.distribution.processor$simulateDistribution(names.count = names.
 
 ```
 
-# Generating testcases
+# Generating sample data and testcases
 
-As original database is 200mb, process can take some processing time
+As original database is 200mb, processing full database can take some time. A method for generating datasets for development and testcases generation is shown.
 
+# Testcase generation example
 ```R
 # download dataset from [Historico de nombres](https://datos.gob.ar/dataset/otros-nombres-personas-fisicas). A mirror is at 
 argentina.names.retriever <- ArgentinaNamesRetriever.class$new()
@@ -57,30 +58,33 @@ names.distribution.processor <- NamesDistribution.class$new(argentina.names.retr
 
 years.80s <- 1980:1990
 popular.names <- names.distribution.processor$getNamesRanking(years = years, n = 5000)
-name.year.count.80s <- names.distribution.processor$getFilteredNameYearCount(names = popular.names$name, years = years.80s)
+name.year.count.80s <- names.distribution.processor$getFilteredNameYearCount(
+													names = popular.names$name, 
+													years = years.80s)
 
 dummy <- argentina.names.retriever$generateTestData(testcase.name = "argentina-80s",
-						    dataset = name.year.count.80s,
-						    years = 1980:1990)
+												    dataset = name.year.count.80s,
+												    years = 1980:1990)
+
+```
 
 
 
-# Generates a randomized names distribution
+## Generation of a randomized names distribution dataset
 
+```R
 universe.size <- nrow(argentina.names.retriever$name.year.count)
 set.seed(111111)
 
 names.sample <- argentina.names.retriever$name.year.count[
-					sample(1:universe.size,size = .01*universe.size, replace = FALSE),] %>% 
-						group_by(name) %>%
-					    summarize( count = sum(count)) %>% 
-					    arrange(desc(count)) %>% 
-					    filter(count >100)
+		sample(1:universe.size,size = .01*universe.size, replace = FALSE),] %>% 
+			group_by(name) %>%
+		    summarize( count = sum(count)) %>% 
+		    arrange(desc(count)) %>% 
+		    filter(count >100)
 nrow(names.sample)
 # 749 names sampled
 write.csv(names.sample, file = "inst/extdata/names.to.profile.csv", row.names = FALSE)
-
-
 ```
 
 
