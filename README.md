@@ -1,7 +1,7 @@
 # TwitterAnalytics 
 Package with tools for making twitter analytics
 
-# Example for infering age distribution from a names list based on demographical data
+# Example for infering age distribution from a set of demographical data
 
 library(tibble)
 library(readr)
@@ -31,11 +31,11 @@ names.sample <- read.csv(file = "inst/extdata/names.to.profile.csv")
 
 
 sim.1 <- names.distribution.processor$simulateDistribution(names.count = names.sample, 
-												 years = years.80s,  
-												 seed = 12345)
+							   years = years.80s,  
+							   seed = 12345)
 sim.1b <- names.distribution.processor$simulateDistribution(names.count = names.sample,
-												 years = years.80s,  
-												 seed = 12345)
+							   years = years.80s,  
+							   seed = 12345)
 
 ```
 
@@ -49,23 +49,23 @@ argentina.names.retriever <- ArgentinaNamesRetriever.class$new()
 argentina.names.retriever$downloadData()
 argentina.names.retriever$loadData()
 
-# GEnerate 80s dataset
+# Generate 80s dataset
 names.distribution.processor <- NamesDistribution.class$new(argentina.names.retriever$historic.names)
 
 
-#Get top names used in 80s. Cant take some time
+# Get top names used in 80s. Can take some seconds
+
 years.80s <- 1980:1990
 popular.names <- names.distribution.processor$getNamesRanking(years = years, n = 5000)
 name.year.count.80s <- names.distribution.processor$getFilteredNameYearCount(names = popular.names$name, years = years.80s)
 
 dummy <- argentina.names.retriever$generateTestData(testcase.name = "argentina-80s",
-										   dataset = name.year.count.80s,
-										   years = 1980:1990)
+						    dataset = name.year.count.80s,
+						    years = 1980:1990)
 
 
-# Generating names.sample from universe
 
-# Generates a randomized usernames distribution
+# Generates a randomized names distribution
 
 universe.size <- nrow(argentina.names.retriever$name.year.count)
 set.seed(111111)
