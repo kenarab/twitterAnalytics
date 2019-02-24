@@ -3,6 +3,7 @@ library(twitterAnalytics)
 library(tibble)
 library(readr)
 library(dplyr)
+library(reshape2)
 library(futile.logger)
 
 

@@ -22,7 +22,7 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
    zip.file = NA,
    data.file = NA,
    #state
-   historic.names = NA,
+   name.year.count = NA,
    initialize = function(names.dt) {
      self$tmp.dir  <- file.path(home.dir, "tmp")
      self$data.dir <- file.path(home.dir, "data")
@@ -50,8 +50,8 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
      self$data.file
    },
    loadData = function(){
-     self$historic.names <- read_csv(file = self$data.file)
-     names(self$historic.names) <- c("name", "count", "year")
+     self$name.year.count <- read_csv(file = self$data.file)
+     names(self$name.year.count) <- c("name", "count", "year")
      self
    },
    getDestFilename = function(dir, testcase.name, extension ){
@@ -60,7 +60,7 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
    generateTestData = function(testcase.name,
                                dataset,
                                names = NULL,
-                               years = sort(unique(self$historic.names$year)),
+                               years = sort(unique(self$name.year.count$year)),
                                testcase.folder = file.path("inst", "extdata")){
      filename     <- self$getDestFilename(dir = tempdir(), testcase.name = testcase.name,
                                            extension = "csv")
@@ -76,11 +76,14 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
    },
    readTestData = function(testcase.name,
                            testcase.folder = file.path("inst", "extdata")){
-     filename.csv <- self$getDestFilename(dir = tempdir(), testcase.name = testcase.name,
+     tmp.dir <- tempdir()
+     dir.exists(tmp.dir)
+     filename.csv <- self$getDestFilename(dir = tmp.dir, testcase.name = testcase.name,
                                                extension = "csv")
      filename.zip <- self$getDestFilename(dir = testcase.folder, testcase.name = testcase.name,
                                                extension = "csv.zip")
-     unzip(filename.zip, exdir = tempdir())
+     unzip(filename.zip, exdir = tmp.dir, junkpaths = TRUE)
+     dir(tmp.dir)
 
      ret <- read.csv(filename.csv)
      futile.logger::flog.info(paste("Read", nrow(ret), "rows into compressed file",

@@ -33,6 +33,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
       filtered.names <- filtered.names %>%
         filter (name %in% names)
     }
+    filtered.names
   },
   getNamesRanking = function(n = 20,
                              names = NULL,
@@ -70,6 +71,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
   simulateDistribution = function(names.count,
                                   years = sort(unique(self$name.year.count$year)),
                                   seed){
+
     #Validate and prepare data
     mandatory.fields <- c("name", "count")
     valid.data <- c("name", "count") %in% names(names.count)
@@ -86,29 +88,45 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     names.distribution  <- self$getNamesDistribution(years = years,
                                                      names = names.count$name,
                                                      relative = TRUE)
+
+    futile.logger::flog.info(paste("Running simulation with seed", seed,
+                                   "for", nrow(names.count), "names using",
+                                   nrow(names.distribution), "names distributions"))
+
     set.seed(seed)
     ret <- names.distribution[0,]
     i <- 1
+    names.not.processed <- NULL
     for (current.name in names.count$name){
       current.name.count <- names.count %>% filter(name == current.name)
       current.name.distribution <- names.distribution %>% filter(name == current.name)
-      cols.data <- 2:ncol(current.name.distribution)
-      current.name.distribution <- current.name.distribution[,cols.data]
-      current.name.sample <- sample(years, size = current.name.count$count,
-                                    replace = TRUE, prob = current.name.distribution)
-      sample.distribution <- data.frame(year = years) %>%
-                                left_join(data.frame(year = current.name.sample, count = 1),
-                                          by = "year") %>%
-                                mutate_each(funs(replace(., which(is.na(.)), 0))) %>%
-                                group_by(year) %>%
-                                summarize(count = sum(count))
-      sample.distribution.tab <- t(sample.distribution)[2,]
-      names(sample.distribution.tab) <- sample.distribution$year
-      sample.distribution.tab <- as.data.frame(t(sample.distribution.tab))
-      sample.distribution.tab$name <- current.name
-      ret[i,] <- sample.distribution.tab[,names(ret)]
-      i <- i +1
+      if (nrow(current.name.distribution)>0){
+        cols.data <- 2:ncol(current.name.distribution)
+        current.name.distribution <- current.name.distribution[,cols.data]
+        current.name.sample <- sample(years, size = current.name.count$count,
+                                      replace = TRUE, prob = current.name.distribution)
+        sample.distribution <- data.frame(year = years) %>%
+          left_join(data.frame(year = current.name.sample, count = 1),
+                    by = "year") %>%
+          mutate_each(funs(replace(., which(is.na(.)), 0))) %>%
+          group_by(year) %>%
+          summarize(count = sum(count))
+        sample.distribution.tab <- t(sample.distribution)[2,]
+        names(sample.distribution.tab) <- sample.distribution$year
+        sample.distribution.tab <- as.data.frame(t(sample.distribution.tab))
+        sample.distribution.tab$name <- current.name
+        ret[i,] <- sample.distribution.tab[,names(ret)]
+        i <- i +1
+      }
+      else{
+        names.not.processed <- c(names.not.processed, current.name)
+      }
     }
+    futile.logger::flog.info(paste(i, "names processed and",
+                   length(names.not.processed),
+                   "names not processed as not present in names distribution"))
+    futile.logger::flog.debug(paste(names.not.processed, collapse = ","))
+
     total <- as.data.frame(t(apply(ret[,cols.data], MARGIN = 2, sum)))
     total$name <- "total"
     ret[i,] <- total
@@ -126,8 +144,26 @@ NamesDistributionSimulation.class <- R6::R6Class("NamesDistributionSimulation",
        self$distribution.matrix <- distribution.matrix
        self
      },
-     compareTo = function(names.distribution.simulation){
+     compareRows = function(sim.2){
+       rows.with.differences <- NULL
        a <- self$distribution.matrix
-       b <- names.distribution.simulation$distribution.matrix
+       b <- sim.2$distribution.matrix
+       for (i in seq_len(nrow(a))){
+         current.name.a <- a[i,]
+         current.name.b <- b %>% filter(name == current.name.a$name)
+         if (nrow(current.name.b)==1){
+           row.diff <- current.name.a==current.name.b
+           if (min(row.diff)==0){
+
+           }
+         }
+         else{
+           rows.with.differences <- c(rows.with.differences, i)
+         }
+       }
+     },
+     compareTo = function(sim.2){
+       self$compareRows(sim.2)
+       length(rows.with.differences) ==0
      }
    ))
