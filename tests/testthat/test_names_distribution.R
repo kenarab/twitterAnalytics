@@ -1,6 +1,6 @@
 
 context("NamesDistribution")
-testthat::test_that("Generate names distribution with argentina's names", {
+testthat::test_that("Generate names distribution with Argentina's names", {
 
   argentina.names.retriever <- ArgentinaNamesRetriever.class$new()
   years.80s <- 1980:1990

@@ -3,5 +3,7 @@
 export(ArgentinaNamesRetriever.class)
 export(NamesDistribution.class)
 import(dplyr)
+import(futile.logger)
+import(readr)
 importFrom(R6,R6Class)
 importFrom(reshape2,dcast)
