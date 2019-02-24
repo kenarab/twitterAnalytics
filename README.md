@@ -37,7 +37,7 @@ historic.names <- read_csv(file = data.file)
 names(historic.names) <- c("name", "count", "year")
 head(historic.names)
 
-#Generate analytics object
+# Creation of NamesDistribution.class 
 names.distribution.processor <- NamesDistribution.class$new(historic.names)
 
 #Get top names used from 1970 to 2015 (last year with data)

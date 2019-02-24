@@ -8,7 +8,7 @@
 #' \describe{
 #'   \item{\code{process()}}{}
 #' }
-#' @field file.id polyhedron file id
+#' @field
 #' @format \code{\link{R6Class}} object.
 #' @docType class
 #' @importFrom R6 R6Class
@@ -113,8 +113,22 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     total <- as.data.frame(t(apply(ret[,cols.data], MARGIN = 2, sum)))
     total$name <- "total"
     ret[i,] <- total
+    ret <- NamesDistributionSimulation.class$new(distribution.matrix = ret)
     ret
   }
 
 ))
 
+
+NamesDistributionSimulation.class <- R6::R6Class("NamesDistributionSimulation",
+   public = list(
+     distribution.matrix = NA,
+     initialize = function(distribution.matrix) {
+       self$distribution.matrix <- distribution.matrix
+       self
+     },
+     compareTo = function(names.distribution.simulation){
+       a <- self$distribution.matrix
+       b <- names.distribution.simulation$distribution.matrix
+     }
+   ))
