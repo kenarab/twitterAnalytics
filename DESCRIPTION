@@ -25,6 +25,7 @@ Imports: futile.logger,
 Collate:
   'names-age-prediction.R'
   'util-lib.R'
+  'package-lib.R'
   'zzz.R'
 BugReports: https://github.com/kenarab/twitterAnalytics/issues
 URL: https://github.com/kenarab/twitterAnalytics/Rpolyhedra

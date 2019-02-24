@@ -17,38 +17,37 @@
 #' @export
 NamesDistribution.class <- R6::R6Class("NamesDistribution",
   public = list(
-    historic.names = NA,
-  initialize = function(names.dt) {
-    self$historic.names <- historic.names
+    name.year.count = NA,
+  initialize = function(name.year.count) {
+    self$name.year.count <- name.year.count
     self
   },
-  getNamesRanking = function(n = 20,
-                             names = NULL,
-                             years = sort(unique(self$historic.names$year))){
-    filtered.names <- self$historic.names
-    filtered.names %>%
+  getFilteredNameYearCount = function(names = NULL,
+                                      years = sort(unique(self$name.year.count$year))){
+    filtered.names <- self$name.year.count
+    filtered.names <- filtered.names %>%
       filter (year %in% years)
-    if (!is.null(names)){
-      filtered.names <- filtered.names %>%
-        filter (name %in% names)
-    }
-    filtered.names %>%
-      group_by(name) %>%
-      summarize( count = sum(count)) %>%
-      arrange(desc(count)) %>%
-      top_n(n = n)
-  },
-  getNamesDistribution = function(years, names = NULL,
-                                  relative = FALSE,
-                                  decimals = 5){
-    filtered.names <- self$historic.names
-    filtered.names <- filtered.names %>% filter(year %in% years)
     if (!is.null(names)){
       filtered.names$name <- normalizeString(filtered.names$name)
       names <- normalizeString(names)
       filtered.names <- filtered.names %>%
         filter (name %in% names)
     }
+  },
+  getNamesRanking = function(n = 20,
+                             names = NULL,
+                             years = sort(unique(self$name.year.count$year))){
+    filtered.names <- self$getFilteredNameYearCount(names = names, years = years)
+    filtered.names %>%
+      group_by(name) %>%
+      summarize( count = sum(count)) %>%
+      arrange(desc(count)) %>%
+      top_n(n = n)
+  },
+  getNamesDistribution = function(names = NULL,
+                                  years, relative = FALSE,
+                                  decimals = 5){
+    filtered.names <- self$getFilteredNameYearCount(names = names, years = years)
     ret <- dcast(filtered.names,
             formula = name ~ year,
             value.var = "count",
@@ -69,7 +68,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     ret
   },
   simulateDistribution = function(names.count,
-                                  years = sort(unique(self$historic.names$year)),
+                                  years = sort(unique(self$name.year.count$year)),
                                   seed){
     #Validate and prepare data
     mandatory.fields <- c("name", "count")
