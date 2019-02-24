@@ -1,14 +1,19 @@
 # TwitterAnalytics 
 Package with tools for making twitter analytics
 
-# Example for infering age distribution from a set of demographical data
+# Infering age distribution from a set of names. 
 
+Example for infering age distribution in a set of names, running simulations derived of demographical data.
+
+```R
+# Load libraries
+library(twitterAnalytics)
 library(tibble)
 library(readr)
 library(dplyr)
+library(reshape2)
+library(futile.logger)
 
-
-```R
 
 # Read testcase data
 argentina.names.retriever <- ArgentinaNamesRetriever.class$new()
@@ -43,7 +48,7 @@ sim.1b <- names.distribution.processor$simulateDistribution(names.count = names.
 
 As original database is 200mb, processing full database can take some time. A method for generating datasets for development and testcases generation is shown.
 
-# Testcase generation example
+## Testcase generation example
 ```R
 # download dataset from [Historico de nombres](https://datos.gob.ar/dataset/otros-nombres-personas-fisicas). A mirror is at 
 argentina.names.retriever <- ArgentinaNamesRetriever.class$new()
