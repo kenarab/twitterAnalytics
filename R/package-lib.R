@@ -75,25 +75,21 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
      filtered.names
    },
    readTestData = function(testcase.name,
-                           dir.testcase = file.path("inst", "extdata")){
+                           dir.testcase = getPackageDir()){
      tmp.dir <- file.path(tempdir(), "unzip")
      dir.create(tmp.dir, showWarnings = FALSE)
-     dir.exists(tmp.dir)
      filename.csv <- self$getDestFilename(dir = tmp.dir, testcase.name = testcase.name,
                                                extension = "csv")
      filename.zip <- self$getDestFilename(dir = dir.testcase, testcase.name = testcase.name,
                                                extension = "csv.zip")
 
 
-     unzip(filename.zip, exdir = tmp.dir, junkpaths = TRUE)
-     # debug
-     filename.csv <<- filename.csv
-     print(dir(tmp.dir))
-     print(file.exists(filename.csv))
+     unzip(zipfile = filename.zip, exdir = tmp.dir)
 
      ret <- read.csv(filename.csv)
      futile.logger::flog.info(paste("Read", nrow(ret), "rows into compressed file",
                                     filename.zip, "using", round(file.info(filename.zip)$size/1000),"kb"))
+     unlink(tmp.dir)
      ret
    }
    ))
