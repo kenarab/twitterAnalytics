@@ -64,12 +64,12 @@ names.distribution.processor <- NamesDistribution.class$new(argentina.names.retr
 years.80s <- 1980:1990
 popular.names <- names.distribution.processor$getNamesRanking(years = years, n = 5000)
 name.year.count.80s <- names.distribution.processor$getFilteredNameYearCount(
-													names = popular.names$name, 
-													years = years.80s)
+									names = popular.names$name, 
+									years = years.80s)
 
 dummy <- argentina.names.retriever$generateTestData(testcase.name = "argentina-80s",
-												    dataset = name.year.count.80s,
-												    years = 1980:1990)
+									dataset = name.year.count.80s,
+									years = 1980:1990)
 
 ```
 
