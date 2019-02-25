@@ -26,27 +26,35 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
    initialize = function(names.dt) {
      self$tmp.dir  <- file.path(home.dir, "tmp")
      self$data.dir <- file.path(home.dir, "data")
-     dir.create(self$tmp.dir, showWarnings = FALSE, recursive = TRUE)
-     dir.create(self$data.dir, showWarnings = FALSE, recursive = TRUE)
      self$zip.file <- paste(self$tmp.dir, "historico-nombres.zip", sep = "/")
      self$data.file <- paste(self$data.dir, "historico-nombres.csv", sep = "/")
      self
    },
    downloadData = function(){
-     if ( !file.exists(self$zip.file)){
-       data.url <- "http://infra.datos.gob.ar/catalog/otros/dataset/2/distribution/2.1/download/historico-nombres.zip"
-       download.file(data.url,
-                     destfile = self$zip.file)
-       futile.logger::flog.info(paste("Downloading data from",data.url))
-     }
-     if ( !file.exists(self$data.file) ){
-       unzip(self$zip.file, exdir = data.dir)
-       futile.logger::flog.info(paste("Extracted from zip file",self$zip.file))
+     use.home.dir <- FALSE
+     consent <- promptUser(prompt = paste("The folder", home.dir,
+                                    "will be created and more than 200mb of data will be generated. Agree [y/n]?: "))
+     #debug
+     print(consent)
+     if (consent == "y"){
+       use.home.dir <- TRUE
+       dir.create(self$tmp.dir, showWarnings = FALSE, recursive = TRUE)
+       dir.create(self$data.dir, showWarnings = FALSE, recursive = TRUE)
 
+       if ( !file.exists(self$zip.file)){
+         data.url <- "http://infra.datos.gob.ar/catalog/otros/dataset/2/distribution/2.1/download/historico-nombres.zip"
+         download.file(data.url,
+                       destfile = self$zip.file)
+         futile.logger::flog.info(paste("Downloading data from",data.url))
+       }
      }
-     futile.logger::flog.info(paste("data.file has",
-                                    system(paste("cat ", self$data.file, " | wc -l")),
-                                           "rows"))
+     if ( !file.exists(self$data.file)  & use.home.dir){
+       unzip(self$zip.file, exdir = self$data.dir)
+       futile.logger::flog.info(paste("Extracted from zip file",self$zip.file))
+       lines.count <- trimws(system(paste("cat ", self$data.file, " | wc -l"), intern = TRUE))
+       futile.logger::flog.info(paste("data.file has",lines.count,
+                                      "rows"))
+     }
      self$data.file
    },
    loadData = function(){

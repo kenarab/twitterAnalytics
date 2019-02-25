@@ -20,3 +20,18 @@ getPackageDir <- function(){
     data.subdir <- "extdata/"
   file.path(home.dir, data.subdir)
 }
+
+#'
+#'
+promptUser <-function(prompt){
+  # #1: asking for consent but somehow is not working
+  if(interactive()) {
+    print("In interactive mode")
+  } else {
+    print("Not in interactive mode")
+  }
+  #FIXME Forcing a y
+  print("FIXME: Forcing an y")
+  readline(prompt =prompt)
+  "y"
+}
