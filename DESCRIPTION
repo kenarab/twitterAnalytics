@@ -6,7 +6,7 @@ Authors@R: c(
     person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("aut","com","cre", "cph"))
     )
 Maintainer: Alejandro Baranek <abaranek@dc.uba.ar>
-Description: Different tools and methods for making twitter analytics
+Description: Different tools and methods for generating twitter analytics.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
