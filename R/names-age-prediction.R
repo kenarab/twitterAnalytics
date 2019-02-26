@@ -136,7 +136,6 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
 
 ))
 
-
 NamesDistributionSimulation.class <- R6::R6Class("NamesDistributionSimulation",
    public = list(
      distribution.matrix = NA,
@@ -167,3 +166,46 @@ NamesDistributionSimulation.class <- R6::R6Class("NamesDistributionSimulation",
        length(rows.with.differences) ==0
      }
    ))
+
+
+NamesDistributionSimulationRun.class <- R6::R6Class("NamesDistributionSimulationRun",
+   inherit = NamesDistributionSimulation.class,
+   public = list(
+     initialize = function(distribution.matrix) {
+       super$initialize(distribution.matrix)
+       self
+     }
+   ))
+
+
+NamesDistributionSimulationMultipe.class <- R6::R6Class("NamesDistributionSimulationMultipe",
+  inherit = NamesDistributionSimulation.class,
+  public = list(
+    pond.covered = 0,
+    #state
+    runs = NA,
+    deviation.matrix = NULL,
+    initialize = function(distribution.matrix) {
+      super$initialize(distribution.matrix)
+      self
+    },
+    addSimulation = function(pond, new.simulation){
+      self$runs[[as.character(length(self$run))]] <- new.simulation
+      if (!is.null(self$distribution.matrix)){
+        self$distribution.matrix <- (self$pond.covered * self$distribution.matrix +
+                                    pond              * new.simulation)
+      }
+      else{
+        self$distribution.matrix <- new.simulation
+      }
+      self$deviation.matrix <- self$calculateDeviationMatrix()
+    },
+    calculateDeviationMatrix = function(){
+      ret <- self$deviation.matrix
+      if (is.null(ret)){
+        self$distribution.matrix <- matrix(0,
+                                           nrow = length(self$runs),
+                                           ncol = length(self$distribution.matrix))
+      }
+    }
+  ))
