@@ -2,6 +2,8 @@
 
 export(ArgentinaNamesRetriever.class)
 export(NamesDistribution.class)
+export(NamesDistributionSimulationMultipleRuns.class)
+export(NamesDistributionSimulationRun.class)
 import(dplyr)
 import(futile.logger)
 import(readr)

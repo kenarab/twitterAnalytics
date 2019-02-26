@@ -12,6 +12,7 @@ library(tibble)
 library(readr)
 library(dplyr)
 library(reshape2)
+library(ggplot2)
 library(futile.logger)
 
 
@@ -35,12 +36,22 @@ names.distribution.processor$getNamesDistribution(names = popular.names$name,
 names.sample <- read.csv(file = "inst/extdata/names.to.profile.csv")
 
 
-sim.1 <- names.distribution.processor$simulateDistribution(names.count = names.sample, 
+#Generates 10 simulations 
+sim.results <- names.distribution.processor$runSimulations(names.count = names.sample, 
 							   years = years.80s,  
+							   runs = 10,
 							   seed = 12345)
-sim.1b <- names.distribution.processor$simulateDistribution(names.count = names.sample,
-							   years = years.80s,  
-							   seed = 12345)
+
+
+results.norm <- sim.results$getResult()
+
+ggplot <- ggplot(data = results.norm) +
+  geom_point(aes(x = year, y = count, group = run, color = run))+
+  geom_smooth(aes(x = year, y = count, group = run, color = run))+
+  ggtitle("Simulated distributions")
+#g
+ggplot
+
 
 ```
 

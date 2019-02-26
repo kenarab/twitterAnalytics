@@ -68,6 +68,24 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
 
     ret
   },
+  runSimulations = function(names.count,
+                            years,
+                            seed,
+                            runs = 1){
+    seeds <- round(runif(runs,0, 10^8))
+    futile.logger::flog.info(paste("Running", runs,"simulations using seeds",
+                        paste(seeds, collapse= ",")))
+    ret <- NamesDistributionSimulationMultipleRuns.class$new()
+
+    #debug
+    ret <<- ret
+    for (i in seq_len(runs)){
+      run <- self$simulateDistribution(names.count, years,
+                                seed = seeds[i])
+      ret$addSimulation(run)
+    }
+    ret
+  },
   simulateDistribution = function(names.count,
                                   years = sort(unique(self$name.year.count$year)),
                                   seed){
@@ -129,83 +147,10 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
 
     total <- as.data.frame(t(apply(ret[,cols.data], MARGIN = 2, sum)))
     total$name <- "total"
-    ret[i,] <- total
-    ret <- NamesDistributionSimulation.class$new(distribution.matrix = ret)
+    ret[i,] <- total[,names(ret)]
+    ret <- NamesDistributionSimulationRun.class$new(distribution.matrix = ret)
     ret
   }
 
 ))
 
-NamesDistributionSimulation.class <- R6::R6Class("NamesDistributionSimulation",
-   public = list(
-     distribution.matrix = NA,
-     initialize = function(distribution.matrix) {
-       self$distribution.matrix <- distribution.matrix
-       self
-     },
-     compareRows = function(sim.2){
-       rows.with.differences <- NULL
-       a <- self$distribution.matrix
-       b <- sim.2$distribution.matrix
-       for (i in seq_len(nrow(a))){
-         current.name.a <- a[i,]
-         current.name.b <- b %>% filter(name == current.name.a$name)
-         if (nrow(current.name.b)==1){
-           row.diff <- current.name.a==current.name.b
-           if (min(row.diff)==0){
-
-           }
-         }
-         else{
-           rows.with.differences <- c(rows.with.differences, i)
-         }
-       }
-     },
-     compareTo = function(sim.2){
-       self$compareRows(sim.2)
-       length(rows.with.differences) ==0
-     }
-   ))
-
-
-NamesDistributionSimulationRun.class <- R6::R6Class("NamesDistributionSimulationRun",
-   inherit = NamesDistributionSimulation.class,
-   public = list(
-     initialize = function(distribution.matrix) {
-       super$initialize(distribution.matrix)
-       self
-     }
-   ))
-
-
-NamesDistributionSimulationMultipe.class <- R6::R6Class("NamesDistributionSimulationMultipe",
-  inherit = NamesDistributionSimulation.class,
-  public = list(
-    pond.covered = 0,
-    #state
-    runs = NA,
-    deviation.matrix = NULL,
-    initialize = function(distribution.matrix) {
-      super$initialize(distribution.matrix)
-      self
-    },
-    addSimulation = function(pond, new.simulation){
-      self$runs[[as.character(length(self$run))]] <- new.simulation
-      if (!is.null(self$distribution.matrix)){
-        self$distribution.matrix <- (self$pond.covered * self$distribution.matrix +
-                                    pond              * new.simulation)
-      }
-      else{
-        self$distribution.matrix <- new.simulation
-      }
-      self$deviation.matrix <- self$calculateDeviationMatrix()
-    },
-    calculateDeviationMatrix = function(){
-      ret <- self$deviation.matrix
-      if (is.null(ret)){
-        self$distribution.matrix <- matrix(0,
-                                           nrow = length(self$runs),
-                                           ncol = length(self$distribution.matrix))
-      }
-    }
-  ))

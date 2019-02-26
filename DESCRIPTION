@@ -23,7 +23,8 @@ Imports: futile.logger,
          R6,
          testthat
 Collate:
-  'names-age-prediction.R'
+  'NamesDistribution.R'
+  'NamesDistributionSimulation.R'
   'util-lib.R'
   'package-lib.R'
   'zzz.R'
