@@ -14,4 +14,4 @@ futile.logger::flog.threshold(futile.logger::ERROR)
 
 
 
-testthat::test_check("twitterAnalitycs")
+testthat::test_check("twitterAnalytics")
