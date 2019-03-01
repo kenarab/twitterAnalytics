@@ -42,10 +42,10 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     filtered.names <- self$getFilteredNameYearCount(names = names,
                                                     years = years)
     filtered.names %>%
-      group_by(name) %>%
+      dplyr::group_by(name) %>%
       summarize( count = sum(count)) %>%
       arrange(desc(count)) %>%
-      top_n(n = n)
+      dplyr::top_n(n = n)
   },
   getNamesDistribution = function(names = NULL,
                                   years, relative = FALSE,
@@ -104,7 +104,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
                  paste(names(names.count), collapse = ",")))
     }
     names.count <- names.count %>%
-      group_by(name) %>% summarize( count = sum(count))
+      dplyr::group_by(name) %>% summarize( count = sum(count))
 
     names.count$name <- normalizeString(names.count$name)
 
@@ -132,10 +132,10 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
                                       replace = TRUE,
                                       prob = current.name.distribution)
         sample.distribution <- data.frame(year = years) %>%
-          left_join(data.frame(year = current.name.sample, count = 1),
+          dplyr::left_join(data.frame(year = current.name.sample, count = 1),
                     by = "year") %>%
-          mutate_each(funs(replace(., which(is.na(.)), 0))) %>%
-          group_by(year) %>%
+          dplyr::mutate_each(funs(replace(., which(is.na(.)), 0))) %>%
+          dplyr::group_by(year) %>%
           summarize(count = sum(count))
         sample.distribution.tab <- t(sample.distribution)[2, ]
         names(sample.distribution.tab) <- sample.distribution$year

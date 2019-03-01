@@ -105,7 +105,7 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
 
      unzip(zipfile = filename.zip, exdir = tmp.dir)
 
-     ret <- read.csv(filename.csv)
+     ret <- readr::read.csv(filename.csv)
      futile.logger::flog.info(paste("Read", nrow(ret),
                                     "rows into compressed file",
                                     filename.zip, "using",
