@@ -11,6 +11,12 @@ NamesDistribution.class
 \description{
 Class for analysing time-distribution of names from a names database with fields: name, quantity, year
 }
+\section{Fields}{
+
+\describe{
+\item{\code{name.year.count}}{name year count distribution}
+}}
+
 \section{Methods}{
 
 \describe{

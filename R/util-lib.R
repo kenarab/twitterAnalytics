@@ -1,5 +1,4 @@
-
-#'
+#' Remove Accents from text
 #'
 removeAccents <- function(text){
   ret <- iconv(text, to = "ASCII//TRANSLIT")
@@ -7,12 +6,15 @@ removeAccents <- function(text){
   ret
 }
 
-# '
+#' Normalize String
+#' Remove accents, trim and lower input text
 normalizeString <- function(text){
   removeAccents(trimws(tolower(text)))
 }
 
 
+#'
+#'
 getPackageDir <- function(){
   home.dir <- find.package("twitterAnalytics", lib.loc = NULL, quiet = TRUE)
   data.subdir <- file.path("inst", "extdata/")

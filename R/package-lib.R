@@ -64,6 +64,7 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
    loadData = function(){
      self$name.year.count <- readr::read_csv(file = self$data.file)
      names(self$name.year.count) <- c("name", "count", "year")
+     self$name.year.count$name <- normalizeString(self$name.year.count$name)
      self
    },
    getDestFilename = function(dir, testcase.name, extension ){

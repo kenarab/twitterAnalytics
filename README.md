@@ -33,7 +33,7 @@ names.distribution.processor$getNamesDistribution(names = popular.names$name,
 
 
 # Simulation of possible distribution for a name profile
-names.sample <- read.csv(file = "inst/extdata/names.to.profile.csv")
+names.year.sample <- read.csv(file = "inst/extdata/names.to.profile.csv")
 
 
 #Generates 10 simulations 
@@ -92,18 +92,13 @@ dummy <- argentina.names.retriever$generateTestData(testcase.name = "argentina-8
 ## Generation of a randomized names distribution dataset
 
 ```R
-universe.size <- nrow(argentina.names.retriever$name.year.count)
-set.seed(111111)
 
-names.sample <- argentina.names.retriever$name.year.count[
-		sample(1:universe.size,size = .01*universe.size, replace = FALSE),] %>% 
-			group_by(name) %>%
-		    summarize( count = sum(count)) %>% 
-		    arrange(desc(count)) %>% 
-		    filter(count >100)
-nrow(names.sample)
+names.year.sample <- generateSampleDistribution(
+                          argentina.names.retriever$name.year.count,
+                          seed = 11111)
+nrow(names.year.sample)
 # 749 names sampled
-write.csv(names.sample, file = "inst/extdata/names.to.profile.csv", row.names = FALSE)
+write.csv(names.year.sample, file = "inst/extdata/names.to.profile.csv", row.names = FALSE)
 ```
 
 
