@@ -62,7 +62,7 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
      self$data.file
    },
    loadData = function(){
-     self$name.year.count <- read_csv(file = self$data.file)
+     self$name.year.count <- readr::read_csv(file = self$data.file)
      names(self$name.year.count) <- c("name", "count", "year")
      self
    },
@@ -74,13 +74,13 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
                                names = NULL,
                                years = sort(unique(self$name.year.count$year)),
                                dir.testcase = file.path("inst", "extdata")){
-     filename.csv     <- self$getDestFilename(dir = tempdir(),
+     filename.csv <- self$getDestFilename(dir = tempdir(),
                                         testcase.name = testcase.name,
                                          extension = "csv")
      filename.zip <- self$getDestFilename(dir = dir.testcase,
                                         testcase.name = testcase.name,
                                          extension = "csv.zip")
-     write.csv(dataset,
+     readr::write_csv(dataset,
                filename.csv,
                row.names = FALSE)
      zip(filename.zip, filename.csv)
@@ -105,7 +105,7 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
 
      unzip(zipfile = filename.zip, exdir = tmp.dir)
 
-     ret <- readr::read.csv(filename.csv)
+     ret <- readr::read_csv(filename.csv)
      futile.logger::flog.info(paste("Read", nrow(ret),
                                     "rows into compressed file",
                                     filename.zip, "using",
