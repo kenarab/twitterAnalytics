@@ -69,8 +69,10 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     self$name.year.count <- self$argentina.names.retriever$name.year.count %>%
                               filter(name %in% names.count$name) %>%
                               filter(year %in% years)
-    futile.logger::flog.info(paste("Distribution for", nrow(names.count), "names and",
-                        length(years), "years has", nrow(self$name.year.count), "observations"))
+    futile.logger::flog.info(
+      paste("Distribution for", nrow(names.count), "names and",
+            length(years), "years has", nrow(self$name.year.count),
+            "observations"))
     self$name.year.count
   },
   getNamesDistribution = function(names = self$available.names,
@@ -187,7 +189,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     futile.logger::flog.debug(paste(names.not.processed, collapse = ","))
 
     total <- as.data.frame(t(apply(ret[, cols.data], MARGIN = 2, sum)))
-    total.relative <- round(total/sum(total),6)
+    total.relative <- round(total / sum(total), 6)
     total$name <- "total"
     total.relative$name <- "total.relative"
     ret <- rbind(ret, total[, names(ret)])
@@ -209,13 +211,15 @@ generateSampleDistribution <- function(name.year.count,
   set.seed(seed)
 
   names.year.sample <- name.year.count[
-    sample(1:universe.size, size = sample.ratio*universe.size, replace = FALSE),]
+    sample(1 : universe.size,
+           size = sample.ratio * universe.size,
+           replace = FALSE), ]
   nrow(names.year.sample)
   names.sample <- names.year.sample %>%
                     group_by(name) %>%
                     summarize( count = sum(count)) %>%
                     arrange(desc(count)) %>%
-                    filter(count >min.count)
+                    filter(count > min.count)
 
   nrow(names.sample)
 
@@ -225,8 +229,11 @@ generateSampleDistribution <- function(name.year.count,
                           filter(name %in% names.sample$name)
   nrow(names.year.sample)
   names.year.sample$year.count <- names.year.sample$count
-  names.year.sample$count <- vapply(names.year.sample$count,
-                                    FUN = function(x){sample(1:x, size = 1, replace = FALSE)},
-                                    FUN.VALUE = numeric(1))
+  names.year.sample$count <-
+        vapply(names.year.sample$count,
+                FUN = function(x){
+                  sample(1:x, size = 1, replace = FALSE)
+                },
+                FUN.VALUE = numeric(1))
   names.year.sample
 }
