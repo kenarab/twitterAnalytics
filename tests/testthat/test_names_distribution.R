@@ -13,8 +13,10 @@ testthat::test_that("Generate names distribution with Argentina's names", {
 
   #creating the processor object
   names.distribution.processor <-
-    NamesDistribution.class$new(dataset.argentina.80s)
-
+    NamesDistribution.class$new(argentina.names.retriever  = argentina.names.retriever)
+  names.distribution.processor$initDefaultValues()
+  names.distribution.processor$setUpDistribution(names.count = names.sample,
+                                                 years = years.80s)
   sim.1 <-
     names.distribution.processor$simulateDistribution(
            names.count = names.sample,
