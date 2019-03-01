@@ -134,7 +134,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
         sample.distribution <- data.frame(year = years) %>%
           dplyr::left_join(data.frame(year = current.name.sample, count = 1),
                     by = "year") %>%
-          dplyr::mutate_each(funs(replace(., which(is.na(.)), 0))) %>%
+          dplyr::mutate_each(list(replace(., which(is.na(.)), 0))) %>%
           dplyr::group_by(year) %>%
           summarize(count = sum(count))
         sample.distribution.tab <- t(sample.distribution)[2, ]

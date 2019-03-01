@@ -47,9 +47,12 @@ results.norm <- sim.results$getResult()
 
 ggplot <- ggplot(data = results.norm) +
   geom_point(aes(x = year, y = count, group = run, color = run))+
-  geom_smooth(aes(x = year, y = count, group = run, color = run))+
+  geom_line(data=sim.results$statistics, aes(x = year, y = mean), color = "black")+
+  geom_smooth(data=sim.results$statistics, aes(x = year, y = mean), color = "black")+
   ggtitle("Simulated distributions")
-#g
+
+            
+
 ggplot
 
 

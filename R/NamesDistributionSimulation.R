@@ -56,7 +56,7 @@ NamesDistributionSimulationMultipleRuns.class <-
     #state
     runs = NULL,
     runs.df = NULL,
-    deviation.matrix = NULL,
+    statistics = NULL,
     initialize = function() {
       super$initialize(NULL)
       self$runs <- list()
@@ -71,10 +71,10 @@ NamesDistributionSimulationMultipleRuns.class <-
       self$runs[[as.character(length(self$run))]] <- new.simulation
 
       self$runs.df <- rbind(self$runs.df, new.simulation.total)
-
-      self$distribution.matrix <- apply(self$runs.df, MARGIN = 2, FUN = mean)
-      self$deviation.matrix <- apply(self$runs.df, MARGIN = 2, FUN = sd)
-      self$runs.df
+      self$statistics <- data.frame(year= as.numeric(names(self$runs.df)))
+      self$statistics$mean <- apply(self$runs.df, MARGIN = 2, FUN = mean)
+      self$statistics$sd   <- apply(self$runs.df, MARGIN = 2, FUN = sd)
+      self$statistics
     },
     getResult = function(){
       ret <- NULL
