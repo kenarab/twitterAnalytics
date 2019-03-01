@@ -1,14 +1,14 @@
 
 #'
 #'
-removeAccents<-function(text){
-  ret<-iconv(text, to='ASCII//TRANSLIT')
-  ret<-gsub("'|\\~","",ret)
+removeAccents <- function(text){
+  ret <- iconv(text, to = "ASCII//TRANSLIT")
+  ret <- gsub("'|\\~", "", ret)
   ret
 }
 
 # '
-normalizeString<-function(text){
+normalizeString <- function(text){
   removeAccents(trimws(tolower(text)))
 }
 
@@ -23,15 +23,15 @@ getPackageDir <- function(){
 
 #'
 #'
-promptUser <-function(prompt){
+promptUser <- function(prompt){
   # #1: asking for consent but somehow is not working
-  if(interactive()) {
+  if ( interactive() ) {
     print("In interactive mode")
   } else {
     print("Not in interactive mode")
   }
   #FIXME Forcing a y
   print("FIXME: Forcing an y")
-  readline(prompt =prompt)
+  readline(prompt = prompt)
   "y"
 }

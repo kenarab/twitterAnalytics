@@ -12,11 +12,11 @@ NamesDistributionSimulation.class <- R6::R6Class("NamesDistributionSimulation",
        a <- self$distribution.matrix
        b <- sim.2$distribution.matrix
        for (i in seq_len(nrow(a))){
-         current.name.a <- a[i,]
+         current.name.a <- a[i, ]
          current.name.b <- b %>% filter(name == current.name.a$name)
-         if (nrow(current.name.b)==1){
-           row.diff <- current.name.a==current.name.b
-           if (min(row.diff)==0){
+         if (nrow(current.name.b) == 1){
+           row.diff <- current.name.a == current.name.b
+           if (min(row.diff) == 0){
 
            }
          }
@@ -27,7 +27,7 @@ NamesDistributionSimulation.class <- R6::R6Class("NamesDistributionSimulation",
      },
      compareTo = function(sim.2){
        self$compareRows(sim.2)
-       length(rows.with.differences) ==0
+       length(rows.with.differences) == 0
      }
    ))
 
@@ -36,7 +36,8 @@ NamesDistributionSimulation.class <- R6::R6Class("NamesDistributionSimulation",
 
 #' Names Distribution Simulation Run is a container class of a unique simulation
 #' @export
-NamesDistributionSimulationRun.class <- R6::R6Class("NamesDistributionSimulationRun",
+NamesDistributionSimulationRun.class <-
+  R6::R6Class("NamesDistributionSimulationRun",
   inherit = NamesDistributionSimulation.class,
   public = list(
     initialize = function(distribution.matrix) {
@@ -48,7 +49,8 @@ NamesDistributionSimulationRun.class <- R6::R6Class("NamesDistributionSimulation
 
 #' Names Distribution Simulation Multiple Runs is a container class of multiple simulations
 #' @export
-NamesDistributionSimulationMultipleRuns.class <- R6::R6Class("NamesDistributionSimulationMultipleRuns",
+NamesDistributionSimulationMultipleRuns.class <-
+  R6::R6Class("NamesDistributionSimulationMultipleRuns",
   inherit = NamesDistributionSimulation.class,
   public = list(
     #state
@@ -60,17 +62,18 @@ NamesDistributionSimulationMultipleRuns.class <- R6::R6Class("NamesDistributionS
       self$runs <- list()
       self
     },
-    addSimulation = function(names.distribution.simulation.run){
-      new.simulation <- names.distribution.simulation.run$distribution.matrix
-      new.simulation.total <- new.simulation  %>% filter(name=="total")
-      new.simulation.total <- new.simulation.total[,2:ncol(new.simulation.total)]
+    addSimulation = function(simulation.output){
+      new.simulation <- simulation.output$distribution.matrix
+      new.simulation.total <- new.simulation  %>% filter(name == "total")
+      new.simulation.total <- new.simulation.total[,
+                                           2:ncol(new.simulation.total)]
 
       self$runs[[as.character(length(self$run))]] <- new.simulation
 
       self$runs.df <- rbind(self$runs.df, new.simulation.total)
 
-      self$distribution.matrix <- apply(self$runs.df, MARGIN =2, FUN= mean)
-      self$deviation.matrix <- apply(self$runs.df, MARGIN =2, FUN= sd)
+      self$distribution.matrix <- apply(self$runs.df, MARGIN = 2, FUN = mean)
+      self$deviation.matrix <- apply(self$runs.df, MARGIN = 2, FUN = sd)
       self$runs.df
     },
     getResult = function(){
@@ -79,8 +82,8 @@ NamesDistributionSimulationMultipleRuns.class <- R6::R6Class("NamesDistributionS
         for (j in 1:ncol(self$runs.df)){
           ret <- rbind(ret,
                        data.frame(run = i,
-                                  year=names(self$runs.df)[j],
-                                  count = self$runs.df[i,j]))
+                                  year = names(self$runs.df)[j],
+                                  count = self$runs.df[i, j]))
         }
       }
       ret
