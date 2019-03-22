@@ -29,4 +29,4 @@ Collate:
   'package-lib.R'
   'zzz.R'
 BugReports: https://github.com/kenarab/twitterAnalytics/issues
-URL: https://github.com/kenarab/twitterAnalytics/Rpolyhedra
+URL: https://github.com/kenarab/twitterAnalytics
