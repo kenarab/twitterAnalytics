@@ -4,3 +4,4 @@
 ^.lintr$
 ^docs$
 ^Meta$
+^\.httr-oauth$

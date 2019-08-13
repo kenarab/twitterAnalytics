@@ -3,14 +3,10 @@ doc
 .Rproj.user
 .Rhistory
 .RData*
-
 #drafts
 R/drafts/
-
 #log
 *.log
-
 #OSX
 **/.DS_Store
-
-
+.httr-oauth

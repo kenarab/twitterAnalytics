@@ -16,14 +16,16 @@ Suggests: knitr, rmarkdown,
 VignetteBuilder: knitr
 Depends: R (>= 3.4)
 Imports: twitteR,
+         R6,
          lgr,
+         experimentR,
          dplyr,
          tibble,
          reshape2,
          readr,
-         R6,
-         testthat
+         testthat,
 Collate:
+  'twitter-retriever.R'
   'NamesDistribution.R'
   'NamesDistributionSimulation.R'
   'util-lib.R'
