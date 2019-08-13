@@ -13,6 +13,7 @@
 #' @docType class
 #' @importFrom R6 R6Class
 #' @import dplyr
+#' @import lgr
 #' @importFrom reshape2 dcast
 #' @export
 NamesDistribution.class <- R6::R6Class("NamesDistribution",
@@ -189,7 +190,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     getLogger(self)$info(paste(i, "names processed and",
                    length(names.not.processed),
                    "names not processed as not present in names distribution"))
-    futile.logger::flog.debug(paste(names.not.processed, collapse = ","))
+    getLogger(self)$debug(paste(names.not.processed, collapse = ","))
 
     total <- as.data.frame(t(apply(ret[, cols.data], MARGIN = 2, sum)))
     total.relative <- round(total / sum(total), 6)

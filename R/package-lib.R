@@ -13,7 +13,7 @@
 #' @docType class
 #' @importFrom R6 R6Class
 #' @import readr
-#' @import futile.logger
+#' @import lgr
 #' @export
 ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
  public = list(
