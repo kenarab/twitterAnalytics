@@ -37,3 +37,23 @@ promptUser <- function(prompt){
   readline(prompt = prompt)
   "y"
 }
+
+#' getLogger
+#' @export
+genLogger <- function(r6.object){
+  lgr::get_logger(class(r6.object)[[1]])
+}
+
+#' getClassLogger
+#' @export
+getLogger <- function(r6.object){
+  #debug
+  #r6.object <<- r6.object
+  #TODO check if not a better solution
+  ret <- r6.object$logger
+  if (is.null(ret)){
+    class <- class(r6.object)[[1]]
+    stop(paste("Class", class, "don't seems to have a configured logger"))
+  }
+  ret
+}

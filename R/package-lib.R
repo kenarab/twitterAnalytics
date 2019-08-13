@@ -23,11 +23,13 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
    data.file = NA,
    #state
    name.year.count = NA,
+   logger = NA,
    initialize = function(names.dt) {
-     self$tmp.dir  <- file.path(home.dir, "tmp")
-     self$data.dir <- file.path(home.dir, "data")
-     self$zip.file <- paste(self$tmp.dir, "historico-nombres.zip", sep = "/")
+     self$tmp.dir   <- file.path(home.dir, "tmp")
+     self$data.dir  <- file.path(home.dir, "data")
+     self$zip.file  <- paste(self$tmp.dir, "historico-nombres.zip", sep = "/")
      self$data.file <- paste(self$data.dir, "historico-nombres.csv", sep = "/")
+     self$logger    <- genLogger(self)
      self
    },
    downloadData = function(){
@@ -48,15 +50,16 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
                  "distribution/2.1/download/historico-nombres.zip", sep = "")
          download.file(data.url,
                        destfile = self$zip.file)
-         futile.logger::flog.info(paste("Downloading data from", data.url))
+         getLogger(self)$info(paste("Downloading data from", data.url))
+
        }
      }
      if ( !file.exists(self$data.file)  & use.home.dir){
        unzip(self$zip.file, exdir = self$data.dir)
-       futile.logger::flog.info(paste("Extracted from zip file", self$zip.file))
+       getLogger(self)$info(paste("Extracted from zip file", self$zip.file))
        lines.count <- trimws(system(paste("cat ", self$data.file, " | wc -l"),
                                     intern = TRUE))
-       futile.logger::flog.info(paste("data.file has", lines.count,
+       getLogger(self)$info(paste("data.file has", lines.count,
                                       "rows"))
      }
      self$data.file
@@ -85,7 +88,7 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
                filename.csv,
                row.names = FALSE)
      zip(filename.zip, filename.csv)
-     futile.logger::flog.info(paste("Saved", nrow(filtered.names),
+     getLogger(self)$info(paste("Saved", nrow(filtered.names),
                                     "rows into compressed file",
                                     filename.zip, "using",
                                     round(file.info(filename.zip)$size / 1000),
@@ -107,7 +110,7 @@ ArgentinaNamesRetriever.class <- R6::R6Class("ArgentinasNamesRetriever",
      unzip(zipfile = filename.zip, exdir = tmp.dir)
 
      ret <- readr::read_csv(filename.csv)
-     futile.logger::flog.info(paste("Read", nrow(ret),
+     getLogger(self)$info(paste("Read", nrow(ret),
                                     "rows into compressed file",
                                     filename.zip, "using",
                                     round(file.info(filename.zip)$size / 1000),

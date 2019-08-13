@@ -5,5 +5,4 @@
 #' @noRd
 .onLoad <- function(libname, pkgname) {
   home.dir <<- "~/.R/twitterAnalytics"
-
 }

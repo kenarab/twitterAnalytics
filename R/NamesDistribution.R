@@ -23,10 +23,13 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     available.names = NULL,
     #state
     names.distribution = NULL,
+    # logger
+    logger = NA,
     initialize = function(argentina.names.retriever) {
   #initialize = function(name.year.count) {
     #self$name.year.count <- name.year.count
     self$argentina.names.retriever <- argentina.names.retriever
+    self$logger <- genLogger(self)
     self
   },
   initDefaultValues = function(){
@@ -69,7 +72,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     self$name.year.count <- self$argentina.names.retriever$name.year.count %>%
                               filter(name %in% names.count$name) %>%
                               filter(year %in% years)
-    futile.logger::flog.info(
+    getLogger(self)$info(
       paste("Distribution for", nrow(names.count), "names and",
             length(years), "years has", nrow(self$name.year.count),
             "observations"))
@@ -104,7 +107,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
                             seed  = 34441222,
                             runs = 1){
     seeds <- round(runif(runs, 0, 10 ^ 8))
-    futile.logger::flog.info(paste("Running", runs, "simulations using seeds",
+    getLogger(self)$info(paste("Running", runs, "simulations using seeds",
                         paste(seeds, collapse = ",")))
     self$setUpDistribution(names.count, years)
     ret <- NamesDistributionSimulationMultipleRuns.class$new()
@@ -140,7 +143,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
     names.count$name <- normalizeString(names.count$name)
 
 
-    futile.logger::flog.info(paste("Running simulation with seed", seed,
+    getLogger(self)$info(paste("Running simulation with seed", seed,
                      "for", nrow(names.count), "names using",
                      nrow(self$names.distribution), "names distributions"))
 
@@ -183,7 +186,7 @@ NamesDistribution.class <- R6::R6Class("NamesDistribution",
         names.not.processed <- c(names.not.processed, current.name)
       }
     }
-    futile.logger::flog.info(paste(i, "names processed and",
+    getLogger(self)$info(paste(i, "names processed and",
                    length(names.not.processed),
                    "names not processed as not present in names distribution"))
     futile.logger::flog.debug(paste(names.not.processed, collapse = ","))
