@@ -48,7 +48,7 @@ TwitterRetriever.class <- R6Class("TwitterRetriever",
       self
     },
     normalize = function(x){
-      tolower(x)
+      normalizeString(x)
     },
     loadTrendsLocations = function(){
       self$trend.locations <- twitteR::availableTrendLocations()
