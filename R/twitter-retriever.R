@@ -199,7 +199,7 @@ TwitterUsers.class <- R6Class("TwitterUsers",
         count <- ifelse(is.null(count), 0, count)
         self$tweets.counter[[screen.name]] <- count + 1
       }
-      !user$screenName %in% self$users.rejected.df$screenName
+      !screen.name %in% self$users.rejected.df$screenName
     },
     getCounterAsDataFrame = function(){
       ret <- data.frame(screenName = names(self$tweets.counter),
