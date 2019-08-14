@@ -19,7 +19,7 @@ testthat::test_that("Generate names distribution with Argentina's names", {
   names.distribution.processor$setUpDistribution(names.count = names.sample,
                                                  years = years.80s)
 
-  self$names.distribution  <- self$getNamesDistribution(years = years.80s,
+  names.distribution.processor$names.distribution  <- self$getNamesDistribution(years = years.80s,
                                                         names = names.sample$name,
                                                         relative = TRUE)
 
